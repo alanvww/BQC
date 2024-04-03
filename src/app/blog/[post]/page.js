@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useTina, tinaField } from 'tinacms/dist/react';
 import { TinaMarkdown } from 'tinacms/dist/rich-text';
 import client from '../../../../tina/__generated__/client';
+import Image from 'next/image';
 
 const BlogPage = () => {
 	const [initialData, setInitialData] = useState(null);
@@ -40,20 +41,38 @@ const BlogPage = () => {
 
 	return (
 		<div>
-			<h1 data-tina-field={tinaField(data, 'title')}>{data.post.title}</h1>
+			<div className="flex-col ">
+				<div className="bg-white py-4 w-full justify-center items-center flex">
+					<Image
+						src={data.post.imgSrc}
+						width={1000}
+						height={1000}
+						alt="Picture of the author"
+						data-tina-field={tinaField(data.post, 'imgSrc')}
+					/>
+				</div>
 
-			<ContentSection
-				tinaField={tinaField(data, 'body')}
-				content={data.post.body}
-			/>
+				<h1
+					className="px-2 py-4 w-full h-24 text-4xl font-bold text-center text-zinc-950 bg-gray-200 justify-center items-center flex"
+					data-tina-field={tinaField(data.post, 'title')}
+				>
+					{data.post.title}
+				</h1>
+				<p
+					className="px-2 py-4 w-full h-24 text-xl font-bold  text-zinc-600 bg-gray-200 justify-center items-center flex"
+					data-tina-field={tinaField(data.post, 'description')}
+				>
+					{data.post.description}
+				</p>
+			</div>
+			<div
+				data-tina-field={tinaField(data.post, 'body')}
+				className="relative py-16 bg-white overflow-hidden text-black"
+			>
+				<TinaMarkdown content={data.post.body} />
+			</div>
 		</div>
 	);
 };
-
-const ContentSection = ({ tinaField, content }) => (
-	<div className="relative py-16 bg-white overflow-hidden text-black">
-		<TinaMarkdown data-tina-field={tinaField} content={content} />
-	</div>
-);
 
 export default BlogPage;
